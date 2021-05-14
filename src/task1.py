@@ -16,16 +16,17 @@ def plot_phase_potrait(matrix, pts, range_x=(-1, 1), range_y=(-1, 1), num_grid_p
                        np.linspace(range_y[0], range_y[1], num_grid_points))
     u, v = np.zeros_like(x), np.zeros_like(y)
 
-    for i in range(num_grid_points):
-        for j in range(num_grid_points):
-            x_p, y_p = x[i, j], y[i, j]
+        
+    u = matrix[0][0] * x + matrix[0][1] * y
+    v = matrix[1][0] * x + matrix[1][1] * y
 
-            u[i, j] = matrix[0][0] * x_p + matrix[0][1] * y_p
-            v[i, j] = matrix[1][0] * x_p + matrix[1][1] * y_p
-
-    plt.streamplot(x, y, u, v, start_points=pts, density=35, linewidth=2, arrowstyle='->', arrowsize=2)
+    plt.figure(figsize=(9,9))
+    plt.streamplot(x, y, u, v, start_points=pts, density=35, linewidth=2, arrowsize=2)
     plt.quiver(x, y, u, v)
     plt.axis('square')
     plt.axis([-1, 1, -1, 1])
+    plt.xlabel("x1")
+    plt.ylabel("x2")
     plt.title(r'$\alpha={0}$, $\lambda_1={1}$, $\lambda_2={2}$'.format(matrix[0][0], eigenvalues[0], eigenvalues[1]))
+    
     plt.show()
