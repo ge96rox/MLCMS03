@@ -1,28 +1,36 @@
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.linalg import eig
+
+def plot_phase_potrait(A, pts, range_x = (-1,1), range_y = (-1,1), num_grid_points = 10):
+    '''
+    plot phase potrait for model.
+    
+
+    '''
+    eigenvalues = eig(A)[0]
+
+    X, Y = np.meshgrid(np.linspace(range_x[0], range_x[1], num_grid_points), 
+                       np.linspace(range_y[0], range_y[1], num_grid_points))
+    U, V = np.zeros_like(X), np.zeros_like(Y)
+   
+
+    grid = np.meshgrid(X, Y)
+
+    for i in range(num_grid_points):
+        for j in range(num_grid_points):
+            
+            x, y = X[i, j], Y[i, j]
+                        
+            U[i,j] = A[0][0]*x+A[0][1]*y
+            V[i,j] = A[1][0]*x+A[1][1]*y
+            
 
 
-def phase_portrait_plot(
-        matrix,
-        alpha,
-        x_min=-1,
-        x_max=1,
-        x_num=10,
-        y_min=-1,
-        y_max=1,
-        y_num=10):
-    x = np.linspace(x_min, x_max, x_num)
-    y = np.linspace(y_min, y_max, y_num)
-    xv, yv = np.meshgrid(x, y)
-    u = np.empty([y_num, x_num], dtype=float)
-    v = np.empty([y_num, x_num], dtype=float)
-    for row in range(y_num):
-        for col in range(x_num):
-            xy = np.array([xv[row, col], yv[row, col]])
-            uv = matrix @ xy
-            u[row, col] = uv[0]
-            v[row, col] = uv[1]
-    plt.quiver(xv, yv, u, v)
-    plt.streamplot(x, y, u, v, color='blue')
-    plt.title('alpha =' + str(alpha))
+    plt.streamplot(X, Y, U, V,start_points = pts,density=35,linewidth=2, arrowstyle='->', arrowsize = 2)
+    plt.axis('square')
+    plt.axis([-1, 1, -1, 1])
+    plt.title(r'$\alpha={0}$, $\lambda_1={1}$, $\lambda_2={2}$'.format(A[0][0],eigenvalues[0],eigenvalues[1]))
     plt.show()
+
