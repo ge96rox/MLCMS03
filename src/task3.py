@@ -3,6 +3,8 @@ import numpy as np
 from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
+from sympy import solveset, S
+from sympy.abc import x
 
 
 def plot_phase_potrait_Andronov_Hopf(alpha, range_x=(-2, 2), range_y=(-2, 2), num_grid_points=10):
@@ -68,7 +70,28 @@ def plot_orbit_with_time(starting_point, t_0 = 0, t_end = 15, num_step = 150):
     ax2.set_ylabel('x2')
     ax2.set_zlabel('time');
     ax2.view_init(90,0)
- 
+
+
+def plot_bifurcation_surface_cusp(view_angle=(30,60)):
+    
+    plt.figure(figsize=(10,7))
+    
+    ax = plt.axes(projection='3d')
+    ax.set_xlabel('a1')
+    ax.set_ylabel('a2')
+    ax.set_zlabel('x')
+    ax.set_title('Visualization of cusp bifurcation surface in 3D')
+    
+    for a1 in np.linspace(-5, 5, 20):
+        for a2 in np.linspace(-5, 5, 20):
+            eq = solveset(a1 + a2 * x - x**3, x, domain=S.Reals)
+            for z in eq:
+                ax.scatter3D(a1,a2,z, color='blue')
+                
+    ax.view_init(*view_angle)
+    
+    
+    
     
     
     
