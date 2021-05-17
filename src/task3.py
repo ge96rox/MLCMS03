@@ -20,7 +20,7 @@ def plot_phase_portrait_andronov_hopf(alpha, range_x=(-2, 2), range_y=(-2, 2), n
     u = alpha * x - y - x * (x ** 2 + y ** 2)
     v = x + alpha * y - y * (x ** 2 + y ** 2)
 
-    plt.figure(figsize=(9, 9))
+    plt.figure(figsize=(7, 7))
     plt.streamplot(x, y, u, v, linewidth=2, arrowsize=2)
     plt.quiver(x, y, u, v)
     plt.plot(0, 0, marker="x", markersize=20)
@@ -56,6 +56,8 @@ def plot_orbit_with_time(starting_point, t_0=0, t_end=15, num_step=150):
     ax1.set_xlabel('x1')
     ax1.set_ylabel('x2')
     ax1.set_zlabel('time')
+    ax1.set_xlim(-2,2)
+    ax1.set_ylim(-2,2)
 
     ax2 = fig.add_subplot(122, projection='3d')
     ax2.scatter3D(soln.y[0], soln.y[1], soln.t)
@@ -63,6 +65,8 @@ def plot_orbit_with_time(starting_point, t_0=0, t_end=15, num_step=150):
     ax2.set_ylabel('x2')
     ax2.set_zlabel('time');
     ax2.view_init(90, 0)
+    ax2.set_xlim(-2,2)
+    ax2.set_ylim(-2,2)
     plt.show()
 
 
