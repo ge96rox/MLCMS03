@@ -116,7 +116,7 @@ def sir_against_time_plot (
 
     fig.tight_layout()
 
-def sir_trajectory (
+def plot_sir_trajectory (
    
     random_state,
     t_0,
@@ -136,7 +136,7 @@ def sir_trajectory (
 
     
     NT = t_end-t_0
-    time = np.linspace(t_0,1500,NT)
+    time = np.linspace(t_0,3000,NT)
 
     cmap = ["BuPu", "Purples", "bwr"][1]
 
@@ -145,18 +145,27 @@ def sir_trajectory (
     fig=plt.figure(figsize=(15,70))
     
     for i in range(21):
-        ax=fig.add_subplot(21,3,i+1,projection="3d")
+        
         sol = solve_ivp(model, t_span=[time[0],time[-1]], y0=SIM0, t_eval=time, 
                         args=(mu0, mu1, beta, A, d, nu, b), method='DOP853', rtol=rtol, atol=atol)
 
         # draw the 3d plot
-
-        ax.scatter(sol.y[0], sol.y[1], sol.y[2], s=1, c=time);
-        ax.set_xlabel("S")
-        ax.set_ylabel("I")
-        ax.set_zlabel("R")
+        ax=fig.add_subplot(11,4,2*i+1,projection="3d")
+        ax.scatter(sol.y[0], sol.y[1], sol.y[2], s=2, c=time) ## CMAP not used here!!!
+        ax.set_xlabel('S')
+        ax.set_ylabel('I')
+        ax.set_zlabel('R')
         ax.set_title("SIR trajectory with b= {0}".format(np.round(b,3)))
- 
+        
+        
+        ax2 = fig.add_subplot(11,4,2*i+2, projection='3d')
+        ax2.scatter(sol.y[0], sol.y[1], sol.y[2], s=2, c=time) ## CMAP not used here!!!
+        ax2.set_xlabel('S')
+        ax2.set_ylabel('I')
+        ax2.set_zlabel('R');
+        ax2.view_init(90, 0)
+        ax2.set_title("SI plane with b= {0}".format(np.round(b,3)))
+    
         b+=0.001
 
     fig.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)    
