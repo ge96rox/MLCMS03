@@ -16,7 +16,7 @@ def bifurcation_plot(func, alpha, description_text):
     origin_x, pos_x, neg_x = func(alpha)
     plt.plot(alpha, pos_x, 'b-', label='stable equilibrium')
     plt.plot(alpha, neg_x, 'r--', label='unstable equilibrium')
-    plt.plot(origin_x[0], origin_x[1], 'o', label='steady state')
+    plt.plot(origin_x[0], origin_x[1], 'o', label='bifurcation starting point')
     plt.xlabel('alpha')
     plt.ylabel('x')
     plt.xlim(-1,5)
