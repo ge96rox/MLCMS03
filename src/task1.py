@@ -20,7 +20,7 @@ def plot_phase_potrait(matrix, pts, range_x=(-1, 1), range_y=(-1, 1), num_grid_p
     u = matrix[0][0] * x + matrix[0][1] * y
     v = matrix[1][0] * x + matrix[1][1] * y
 
-    plt.figure(figsize=(9,9))
+    plt.figure(figsize=(6,6))
     plt.streamplot(x, y, u, v, start_points=pts, density=35, linewidth=2, arrowsize=2)
     plt.quiver(x, y, u, v)
     plt.axis('square')
