@@ -12,19 +12,31 @@ def lorenz_func(t, state, rho, sigma, beta):
     return np.array([sigma * (y - x), x * (rho - z) - y, x * y - beta * z])
 
 
-def plot_logistic_map_bifurcation(r_range=[0, 4], x_range=[0, 1],
-                                  resolution=100, iteration=100):
-    x = np.linspace(x_range[0], x_range[1], resolution)
+def plot_logistic_map_bifurcation(r_range=[0, 4], resolution=1000, iteration=1000, last_iter_plot=100):
+    x = 1e-5 * np.ones(resolution)
+    lyapunov = np.zeros(resolution)
     r = np.linspace(r_range[0], r_range[1], resolution)
-    # plt.figure()
-    plt.xlim(r_range[0], r_range[1])
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 9), sharex=True)
+
     for i in range(iteration):
         x = logistic_func(r, x)
-        plt.plot(r, x)
+        lyapunov += np.log(abs(r - 2 * r * x) + 1e-10)
+        if i >= iteration - last_iter_plot:
+            ax1.plot(r, x, ',')
+    ax1.set_xlim(r_range[0], r_range[1])
+    ax1.set_xlabel("r")
+    ax1.set_ylabel("x")
+    ax1.set_title("Bifurcation diagram for the logistic map")
 
-    plt.xlabel("r")
-    plt.ylabel("x")
-    plt.title("Bifurcation diagram for the logistic map")
+    ax2.plot(r[lyapunov < 0], lyapunov[lyapunov < 0] / iteration, ',k', markersize=1,  alpha=.5)
+
+    ax2.plot(r[lyapunov >= 0], lyapunov[lyapunov >= 0] / iteration, ',r', markersize=1, alpha=.5)
+
+    ax2.grid(color='grey', linestyle='-', linewidth=0.5)
+    ax2.set_title("Maximal Lyapunov exponent")
+    ax2.set_ylim(-5, 1)
+    plt.tight_layout()
     plt.show()
 
 
@@ -42,3 +54,8 @@ def plot_lorenz_burfication(y0_list, rho, sigma, beta):
     plt.show()
 
 
+if __name__ == "__main__":
+    r_range = [0, 4]
+    x_range = [0, 1]
+
+    plot_logistic_map_bifurcation(r_range, resolution=100, iteration=1000)
