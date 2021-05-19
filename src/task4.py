@@ -54,3 +54,26 @@ def plot_lorenz_burfication(y0_list, rho, sigma, beta):
         ax.legend()
         ax.set_title(rf'$\sigma$ = {sigma}, $\rho$ = {round(rho, 3)}, $\beta$ = {round(beta, 3)}')
     plt.show()
+    
+def plot_logistic_map_simulation(r_values, x_init = 0.1, n =50):
+
+    fig = plt.figure(figsize=(15,15))
+ 
+    n_values = np.linspace(0,n-1,n) 
+    i = 0 
+
+    for r in r_values:
+        x = x_init*np.ones(n)
+        for j in range(1,n):
+            x[j] = logistic_func(r,x[j-1])
+
+        ax = plt.subplot(len(r_values),1,i+1)
+        i += 1
+
+        ax.plot(n_values,x)
+        ax.set_title("Logistic Map with x = {0}, r = {1}".format(x_init,r))
+        ax.set(xlabel='n',ylabel='x',xlim=(0,n-2))
+        ax.grid()
+        
+    fig.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
+    plt.show()
