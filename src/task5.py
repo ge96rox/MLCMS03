@@ -6,7 +6,8 @@ from scipy.integrate import solve_ivp
 
 
 def mu(b, I, mu0, mu1):
-    """Recovery rate.
+    """
+    Recovery rate.
     
     """
     # recovery rate, depends on mu0, mu1, b
@@ -64,7 +65,7 @@ def model(t, y, mu0, mu1, beta, A, d, nu, b):
     return [dSdt, dIdt, dRdt]
 
 
-def sir_against_time_plot(
+def sir_plots(
         random_state,
         t_0,
         t_end,
@@ -162,7 +163,7 @@ def plot_sir_trajectory(
         ax2.set_xlabel('S')
         ax2.set_ylabel('I')
         ax2.set_zlabel('R');
-        ax2.view_init(90, 0)
+        ax2.view_init(azim=0, elev=90)
         ax2.set_title("SI plane with b= {0}".format(np.round(b, 3)))
 
         b += 0.001
