@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from scipy.optimize import fsolve
 
 from scipy.integrate import solve_ivp
 
@@ -32,6 +33,51 @@ def h(I, mu0, mu1, beta, A, d, nu, b):
     c3 = d * (beta - nu)
     res = c0 + c1 * I + c2 * I ** 2 + c3 * I ** 3
     return res
+
+def h_roots( mu0, mu1, beta, A, d, nu, b):
+    
+    c0 = b ** 2 * d * A
+    c1 = b * ((mu0 - mu1 + 2 * d) * A + (beta - nu) * b * d)
+    c2 = (mu1 - mu0) * b * nu + 2 * b * d * (beta - nu) + d * A
+    c3 = d * (beta - nu)
+    
+    h = lambda I : c0 + c1 * I + c2 * I ** 2 + c3 * I ** 3
+    x = np.array([0.0, 0.1])
+    return fsolve(h,x)
+
+def f(I, mu0, mu1, beta, A, d, nu, b):
+    """
+    Endemic equilibrium function for I.
+    """
+    r0 = R0(beta, d, nu, mu1)
+    bigA= (d +nu + mu0)*(beta - nu)
+    bigB= (d +nu +mu0 - beta)*A+(beta - nu)*(d +nu + mu1)*b
+    bigC= (d +nu + mu1)*A*b*(1 - r0)
+    
+    s0=d+nu+mu0
+    s1=d+nu+mu1
+    
+   
+    
+    #delta_0 = (beta - nu)**2*(s1**2)*(b**2) - 2*A*(beta - nu)*(beta*(mu1 - mu0)+ s0*(s1 - beta))*b +A**2*(beta - mu0)**2.
+    #I = -bigB/(2*bigA)
+    #I1 = (-bigB-np.sqrt(delta_0))/(2*A)
+    #I2 = (-bigB+np.sqrt(delta_0))/(2*A)
+    f = bigA * (I ** 2) + bigB * I + bigC
+    
+    return f
+        
+
+def f_roots( mu0, mu1, beta, A, d, nu, b):
+    
+    r0 = R0(beta, d, nu, mu1)
+    bigA= (d +nu + mu0)*(beta - nu)
+    bigB= (d +nu +mu0 - beta)*A+(beta - nu)*(d +nu + mu1)*b
+    bigC= (d +nu + mu1)*A*b*(1 - r0)
+    
+    f = lambda I : bigA * I ** 2 + bigB * I + bigC
+    x = np.array([0.0, 1])
+    return fsolve(f,x)[1]
 
 
 def model(t, y, mu0, mu1, beta, A, d, nu, b):
@@ -78,15 +124,14 @@ def sir_plots(
         nu,
         b,
         mu0,
-        mu1):
+        mu1,
+        starting_point):
     # information
     print("Reproduction number R0=", R0(beta, d, nu, mu1))
     print('Globally asymptotically stable if beta <=d+nu+mu0. This is', beta <= d + nu + mu0)
 
     # simulation
-    rng = np.random.default_rng(random_state)
-
-    SIM0 = rng.uniform(low=(190, 0, 1), high=(199, 0.1, 8), size=(3,))
+    SIM0 = np.array(starting_point)
 
     NT = t_end - t_0
     time = np.linspace(t_0, t_end, NT)
@@ -116,7 +161,10 @@ def sir_plots(
     ax[2].set_title("Indicator function h(I)")
     ax[2].set_xlabel("I")
     ax[2].set_ylabel("h(I)")
-
+    
+    fr = f_roots(mu0, mu1, beta, A, d, nu, b)
+    ax[2].plot(fr, 0 , marker='x', markersize =10 , linestyle='-', color='r')
+        
     fig.tight_layout()
 
 
@@ -144,7 +192,7 @@ def plot_sir_trajectory(
 
     SIM0 = np.array(starting_point)
     # b = 0.01
-    fig = plt.figure(figsize=(15, 70))
+    fig = plt.figure(figsize=(20, 70))
 
     for i in range(21):
         sol = solve_ivp(model, t_span=[time[0], time[-1]], y0=SIM0, t_eval=time,
@@ -158,14 +206,19 @@ def plot_sir_trajectory(
         ax.set_zlabel('R')
         ax.set_title("SIR trajectory with b= {0}".format(np.round(b, 3)))
 
-        ax2 = fig.add_subplot(11, 4, 2 * i + 2, projection='3d')
-        ax2.scatter(sol.y[0], sol.y[1], sol.y[2], s=2, c=time)  ## CMAP not used here!!!
+        ax2 = fig.add_subplot(11, 4, 2 * i + 2)
+        ax2.scatter(sol.y[0], sol.y[1], s=2, c=time)  ## CMAP not used here!!!
         ax2.set_xlabel('S')
         ax2.set_ylabel('I')
-        ax2.set_zlabel('R');
-        ax2.view_init(azim=0, elev=90)
+        
+        ax2.plot(starting_point[0], starting_point[1], marker='X', linestyle='-', color='r')
+        
+        aspect = np.diff(ax2.get_xlim()) / np.diff(ax2.get_ylim())
+        ax2.set_aspect(aspect)
         ax2.set_title("SI plane with b= {0}".format(np.round(b, 3)))
 
         b += 0.001
 
     fig.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
+    
+
