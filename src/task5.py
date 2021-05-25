@@ -9,7 +9,17 @@ from scipy.integrate import solve_ivp
 def mu(b, I, mu0, mu1):
     """
     Recovery rate.
-    
+
+    Parameters:
+    -----------
+    I
+        Infected population
+    mu0
+        Minimum recovery rate
+    mu1
+        Maximum recovery rate
+    b
+        hospital beds per 10,000 persons
     """
     # recovery rate, depends on mu0, mu1, b
     mu = mu0 + (mu1 - mu0) * (b / (I + b))
@@ -19,6 +29,19 @@ def mu(b, I, mu0, mu1):
 def R0(beta, d, nu, mu1):
     """
     Basic reproduction number.
+
+    Parameters:
+    -----------
+
+    mu1
+        Maximum recovery rate
+    beta
+        average number of adequate contacts per unit time with infectious individuals
+    d
+        natural death rate
+    nu
+        disease induced death rate
+
     """
     return beta / (d + nu + mu1)
 
@@ -26,6 +49,23 @@ def R0(beta, d, nu, mu1):
 def h(I, mu0, mu1, beta, A, d, nu, b):
     """
     Indicator function for bifurcations.
+
+    Parameters:
+    -----------
+    mu0
+        Minimum recovery rate
+    mu1
+        Maximum recovery rate
+    beta
+        average number of adequate contacts per unit time with infectious individuals
+    A
+        recruitment rate of susceptibles (e.g. birth rate)
+    d
+        natural death rate
+    nu
+        disease induced death rate
+    b
+        hospital beds per 10,000 persons
     """
     c0 = b ** 2 * d * A
     c1 = b * ((mu0 - mu1 + 2 * d) * A + (beta - nu) * b * d)
@@ -35,6 +75,27 @@ def h(I, mu0, mu1, beta, A, d, nu, b):
     return res
 
 def h_roots( mu0, mu1, beta, A, d, nu, b):
+    """
+        Solution for Indicator function for bifurcations.
+
+    Parameters:
+    -----------
+    mu0
+        Minimum recovery rate
+    mu1
+        Maximum recovery rate
+    beta
+        average number of adequate contacts per unit time with infectious individuals
+    A
+        recruitment rate of susceptibles (e.g. birth rate)
+    d
+        natural death rate
+    nu
+        disease induced death rate
+    b
+        hospital beds per 10,000 persons
+
+    """
     
     c0 = b ** 2 * d * A
     c1 = b * ((mu0 - mu1 + 2 * d) * A + (beta - nu) * b * d)
@@ -48,6 +109,25 @@ def h_roots( mu0, mu1, beta, A, d, nu, b):
 def f(I, mu0, mu1, beta, A, d, nu, b):
     """
     Endemic equilibrium function for I.
+
+    Parameters:
+    -----------
+    I
+        Infected population
+    mu0
+        Minimum recovery rate
+    mu1
+        Maximum recovery rate
+    beta
+        average number of adequate contacts per unit time with infectious individuals
+    A
+        recruitment rate of susceptibles (e.g. birth rate)
+    d
+        natural death rate
+    nu
+        disease induced death rate
+    b
+        hospital beds per 10,000 persons
     """
     r0 = R0(beta, d, nu, mu1)
     bigA= (d +nu + mu0)*(beta - nu)
@@ -69,7 +149,26 @@ def f(I, mu0, mu1, beta, A, d, nu, b):
         
 
 def f_roots( mu0, mu1, beta, A, d, nu, b):
-    
+    """
+    Solution I2 for Endemic equilibrium function.
+
+    Parameters:
+    -----------
+    mu0
+        Minimum recovery rate
+    mu1
+        Maximum recovery rate
+    beta
+        average number of adequate contacts per unit time with infectious individuals
+    A
+        recruitment rate of susceptibles (e.g. birth rate)
+    d
+        natural death rate
+    nu
+        disease induced death rate
+    b
+        hospital beds per 10,000 persons
+    """
     r0 = R0(beta, d, nu, mu1)
     bigA= (d +nu + mu0)*(beta - nu)
     bigB= (d +nu +mu0 - beta)*A+(beta - nu)*(d +nu + mu1)*b
