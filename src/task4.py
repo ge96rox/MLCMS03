@@ -4,10 +4,38 @@ from scipy.integrate import solve_ivp
 
 
 def logistic_func(r, x):
+    """logistic map equation
+
+    Parameters
+    ----------
+    r : float [0,4]
+        The growth rate
+    x : float [0,1]
+        current state
+    Returns
+    -------
+    None
+    """
     return r * x * (1 - x)
 
 
 def lorenz_func(t, state, rho, sigma, beta):
+    """lorenz attrator equation
+
+    Parameters
+    ----------
+    t : float
+        time step
+    state : tuple
+        current state
+    rho: float
+        rho in lorenz equation
+    sigma: float
+        sigma in lorenz equation
+    Returns
+    -------
+    None
+    """
     x, y, z = state
     return np.array([sigma * (y - x), x * (rho - z) - y, x * y - beta * z])
 
@@ -15,6 +43,27 @@ def lorenz_func(t, state, rho, sigma, beta):
 def plot_logistic_map_bifurcation(r_range=[0, 4], x_range=[0, 1],
                                   resolution=1000, iteration=1000,
                                   last_iter_plot=100, save=False):
+
+    """function that plot logistic map bifurcation diagram
+
+    Parameters
+    ----------
+    r_range : list
+        range of r
+    x_range : list
+        range of x
+    resolution: int
+        number of point to plot in r range
+    iteration: int
+        number of iteration for logistic map
+    last_iter_plot: int
+        number of last iterations to keep for plotting
+    save: bool
+        save as pdf image
+    Returns
+    -------
+    None
+    """
     x = 1e-5 * np.ones(resolution)
     lyapunov = np.zeros(resolution)
     r = np.linspace(r_range[0], r_range[1], resolution)
@@ -48,6 +97,26 @@ def plot_logistic_map_bifurcation(r_range=[0, 4], x_range=[0, 1],
 
 
 def plot_lorenz_burfication(y0_list, rho, sigma, beta, sim_time, resolution, save=False):
+    """function that plot lorenz attractor phase portrait
+
+    Parameters
+    ----------
+    y0_list : list
+        a list contains different initial y0
+    rho : float
+        rho in lorenz equation
+    sigma: float
+        sigma in lorenz equation
+    sim_time: int
+        simulation time
+    resolution: int
+        number of points for plotting
+    save: bool
+        save as pdf image
+    Returns
+    -------
+    None
+    """
     t = np.linspace(0, sim_time, resolution)
     t_span = [t[0], t[-1]]
     sols = []
@@ -76,6 +145,20 @@ def plot_lorenz_burfication(y0_list, rho, sigma, beta, sim_time, resolution, sav
 
 
 def cal_first_time(sol0, sol1):
+    """function that calculate the first time since when the distance between two trajectories
+      is larger than one
+
+    Parameters
+    ----------
+    sol0 : solution structure
+        solution of ivp_solve for 1. orbits
+    sol1 : solution structure
+        solution of ivp_solve for 2. orbits
+    Returns
+    -------
+    int
+    index of time since when the distance between two trajectories
+    """
     sol0_x, sol0_y, sol0_z = sol0.y[0], sol0.y[1], sol0.y[2]
     sol1_x, sol1_y, sol1_z = sol1.y[0], sol1.y[1], sol1.y[2]
     sol0_x = sol0_x[:, np.newaxis]
@@ -95,6 +178,22 @@ def cal_first_time(sol0, sol1):
 
 
 def plot_logistic_map_simulation(r_values, x_init=0.1, n=50, save=False):
+    """function that plot logistic map simulation result
+
+    Parameters
+    ----------
+    r_values : float
+        growth rate
+    x_init : float
+        init value of x
+    n: int
+        iteration
+    save: bool
+        save as pdf image
+    Returns
+    -------
+    None
+    """
     fig = plt.figure(figsize=(9, 15))
 
     n_values = np.linspace(0, n - 1, n)

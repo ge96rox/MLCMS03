@@ -6,11 +6,22 @@ from sympy.abc import x
 
 
 def plot_phase_portrait_andronov_hopf(alpha, range_x=(-2, 2), range_y=(-2, 2), num_grid_points=10):
-    '''
-    plot phase potrait for model.
-    
+    """function that plot andronov hopf phase portrait
 
-    '''
+    Parameters
+    ----------
+    alpha : float
+        alpha in andronov hopf equation
+    range_x : tuple
+        range of x
+    range_y: tuple
+        range of x
+    num_grid_points: int
+        number of points that divides the range x/y
+    Returns
+    -------
+    None
+    """
 
     x, y = np.meshgrid(np.linspace(range_x[0], range_x[1], num_grid_points),
                        np.linspace(range_y[0], range_y[1], num_grid_points))
@@ -35,7 +46,9 @@ def plot_phase_portrait_andronov_hopf(alpha, range_x=(-2, 2), range_y=(-2, 2), n
 
 
 def andronov_hopf_model(t, y):
-    # alpha = 1
+    """
+    andronov hopf equation
+    """
 
     x1, x2 = y
     u = 1 * x1 - x2 - x1 * (x1 ** 2 + x2 ** 2)
@@ -44,6 +57,22 @@ def andronov_hopf_model(t, y):
 
 
 def plot_orbit_with_time(starting_point, t_0=0, t_end=15, num_step=150):
+    """function that plot andronov hopf orbits
+
+    Parameters
+    ----------
+    starting_point : float
+        starting point for plotting
+    t_0 : float
+        initial time
+    t_end: float
+        end time
+    num_step: int
+        number of time step
+    Returns
+    -------
+    None
+    """
     t = np.linspace(t_0, t_end, num_step)
     y0 = np.array(starting_point)
     soln = solve_ivp(andronov_hopf_model, t_span=[t[0], t[-1]], y0=y0, t_eval=t)
@@ -71,6 +100,16 @@ def plot_orbit_with_time(starting_point, t_0=0, t_end=15, num_step=150):
 
 
 def plot_bifurcation_surface_cusp(view_angle=(30, 60)):
+    """function that cusp plot bifurcation surface
+
+    Parameters
+    ----------
+    view_angle : tuple
+        view angle
+    Returns
+    -------
+    None
+    """
     plt.figure(figsize=(10, 7))
 
     ax = plt.axes(projection='3d')

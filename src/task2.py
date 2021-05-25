@@ -3,16 +3,36 @@ import matplotlib.pyplot as plt
 
 
 def first_equation(alpha):
+    """
+    equation X'= alpha - X^2
+    """
     alpha_ge_zero = np.where(alpha < 0, np.nan, alpha)
     return (0, 0), np.sqrt(alpha_ge_zero), -np.sqrt(alpha_ge_zero)
 
 
 def second_equation(alpha):
+    """
+    equation X'= alpha - 2*X^2 - 3
+    """
     alpha_ge_three = np.where(alpha < 3, np.nan, alpha)
     return (3, 0), np.sqrt((alpha_ge_three - 3) / 2), -np.sqrt((alpha_ge_three - 3) / 2)
 
 
 def bifurcation_plot(func, alpha, description_text):
+    """function that plot bifurcation diagram
+
+    Parameters
+    ----------
+    func : function
+        equation to plot
+    alpha : float
+        alpha in the equation to plot
+    description_text : str
+        description text
+    Returns
+    -------
+    None
+    """
     origin_x, pos_x, neg_x = func(alpha)
     plt.plot(alpha, pos_x, 'b-', label='stable equilibrium')
     plt.plot(alpha, neg_x, 'r--', label='unstable equilibrium')
@@ -25,7 +45,24 @@ def bifurcation_plot(func, alpha, description_text):
     
     
 def phase_portrait_plot(alpha, system_id = 2, range_x=(-2,2), range_y=(-1,1), num_grid_points=10):
-    
+    """function that plot phase portrait
+
+    Parameters
+    ----------
+    alpha : float
+        alpha in equations
+    system_id : int
+        id of first equation or second equation
+    range_x : tuple
+        range of r
+    range_y : tuple
+        range of x
+    num_grid_points: int
+        number of points for plotting
+    Returns
+    -------
+    None
+    """
     x, y = np.meshgrid(np.linspace(range_x[0], range_x[1], num_grid_points),
                        np.linspace(range_y[0], range_y[1], num_grid_points))
     u, v = np.zeros_like(x), np.zeros_like(y)

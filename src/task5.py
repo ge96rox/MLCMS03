@@ -126,6 +126,34 @@ def sir_plots(
         mu0,
         mu1,
         starting_point):
+    """
+    function plots SIR model
+
+    Parameters:
+    -----------
+    t_0
+        init time
+    t_end
+        end time
+    rtol
+        relative tolerance RTOL
+    atol
+        absolute tolerance RTOL
+    mu0
+        Minimum recovery rate
+    mu1
+        Maximum recovery rate
+    beta
+        average number of adequate contacts per unit time with infectious individuals
+    A
+        recruitment rate of susceptibles (e.g. birth rate)
+    d
+        natural death rate
+    nu
+        disease induced death rate
+    b
+        hospital beds per 10,000 persons
+    """
     # information
     print("Reproduction number R0=", R0(beta, d, nu, mu1))
     print('Globally asymptotically stable if beta <=d+nu+mu0. This is', beta <= d + nu + mu0)
@@ -185,6 +213,37 @@ def plot_sir_trajectory(
         mu1,
 
         starting_point):
+    """
+    function plots SIR model
+
+    Parameters:
+    -----------
+    t_0
+        init time
+    t_end
+        end time
+    rtol
+        relative tolerance RTOL
+    atol
+        absolute tolerance RTOL
+    mu0
+        Minimum recovery rate
+    mu1
+        Maximum recovery rate
+    beta
+        average number of adequate contacts per unit time with infectious individuals
+    A
+        recruitment rate of susceptibles (e.g. birth rate)
+    d
+        natural death rate
+    nu
+        disease induced death rate
+    b
+        hospital beds per 10,000 persons
+
+    starting_point
+        start point position
+    """
     NT = t_end - t_0
     time = np.linspace(t_0, 3000, NT)
 

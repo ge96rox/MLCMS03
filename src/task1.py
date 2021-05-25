@@ -5,11 +5,24 @@ from numpy.linalg import eig
 
 
 def plot_phase_potrait(matrix, pts, range_x=(-1, 1), range_y=(-1, 1), num_grid_points=10):
-    '''
-    plot phase potrait for model.
-    
+    """function that plot phase_potrait of linear system X'=AX
 
-    '''
+    Parameters
+    ----------
+    matrix: np.ndarray
+        matrix A in equation X'=AX
+    pts: list of list
+        initial points
+    range_x : tuple
+        range of x
+    range_y: int
+        range of y
+    num_grid_points: int
+        number of point within range x/y
+    Returns
+    -------
+    None
+    """
     eigenvalues = eig(matrix)[0]
 
     x, y = np.meshgrid(np.linspace(range_x[0], range_x[1], num_grid_points),
